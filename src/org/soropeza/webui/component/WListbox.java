@@ -20,6 +20,7 @@ package org.soropeza.webui.component;
 import java.util.Vector;
 
 import org.adempiere.webui.component.ListModelTable;
+import org.adempiere.webui.util.ZKUpdateUtil;
 import org.soropeza.listener.OnClickComponentTableListener;
 
 
@@ -39,7 +40,7 @@ public class WListbox extends org.adempiere.webui.component.WListbox implements 
 	private Vector<Vector<Object>> lines;
 
 
-	private ListModelTable orderlineModelTable;
+	private ListModelTable modelTable;
 
 	/**
 	 * Default constructor.
@@ -56,11 +57,11 @@ public class WListbox extends org.adempiere.webui.component.WListbox implements 
 		setItemRenderer(rowRenderer);
 		setModel(new ListModelTable());
 		lines = new Vector<Vector<Object>>();
-		orderlineModelTable = new ListModelTable(lines);
+		modelTable = new ListModelTable(lines);
 	}
 
 
-	public void addTableOnClickComponentListener(OnClickComponentTableListener listener){ //Update sergioropeza88@gmail.com
+	public void addOnClickComponentTableListener(OnClickComponentTableListener listener){ //Update sergioropeza88@gmail.com
 	    if (listener == null){
 	    	return;
 	    }
@@ -72,6 +73,13 @@ public class WListbox extends org.adempiere.webui.component.WListbox implements 
 		if (onClickButtonlistener!=null)
 			onClickButtonlistener.onClickComponentTable(this,component, index, column);
 		
+	}
+	
+	public void clear(Boolean isRefresh) {
+		clear();
+		if (isRefresh) {
+			refresh();
+		}
 	}
 
 	public void clear() {
@@ -86,8 +94,8 @@ public class WListbox extends org.adempiere.webui.component.WListbox implements 
 	}
 	
 	public void refresh() {
-		orderlineModelTable = new ListModelTable(lines);
-		setModel(orderlineModelTable);
+		modelTable = new ListModelTable(lines);
+		setModel(modelTable);
 		repaint();
 	}
 
@@ -100,13 +108,30 @@ public class WListbox extends org.adempiere.webui.component.WListbox implements 
 		this.lines = lines;
 	}
 
-	public ListModelTable getOrderlineModelTable() {
-		return orderlineModelTable;
+	public ListModelTable getModelTable() {
+		return modelTable;
 	}
 
 
-	public void setOrderlineModelTable(ListModelTable orderlineModelTable) {
-		this.orderlineModelTable = orderlineModelTable;
+	public void setModelTable(ListModelTable modelTable) {
+		this.modelTable = modelTable;
+	}
+	
+	public static WListbox newDataTable() {
+		WListbox dataTable = new WListbox();
+		ZKUpdateUtil.setWidth(dataTable, "100%");
+		ZKUpdateUtil.setHeight(dataTable, "100%");
+		dataTable.setSizedByContent(false);
+		ZKUpdateUtil.setVflex(dataTable, true);
+		
+		return dataTable;
+	}
+	
+	public static WListbox newDataTableAutoSize() {
+		WListbox listBox = newDataTable();
+		listBox.setSizedByContent(true);
+		listBox.setSpan(true);
+		return listBox;
 	}
 
 }
