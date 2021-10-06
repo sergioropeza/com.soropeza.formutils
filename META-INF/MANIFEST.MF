@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Formutils
-Bundle-SymbolicName: com.soropeza.formutils;singleton:=true
+Bundle-SymbolicName: com.soropeza.formutils
 Bundle-Version: 8.2.0.qualifier
 Bundle-Vendor: SOROPEZA
 Automatic-Module-Name: com.soropeza.formutils
