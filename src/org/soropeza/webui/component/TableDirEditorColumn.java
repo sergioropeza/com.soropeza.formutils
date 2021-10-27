@@ -16,5 +16,6 @@ public class TableDirEditorColumn extends  WTableDirEditor implements IColumnGri
 		this(lookup, value, true);
 	}
 
+	
 
 }
