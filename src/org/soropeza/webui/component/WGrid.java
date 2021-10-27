@@ -31,6 +31,7 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 	private Rows rows;
 	private Row header;
 	private GridValueChangeListener listener;
+	private String styleLabelsBold;
 	/**
 	 * 
 	 */
@@ -38,22 +39,31 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 
 	public WGrid() {
 		super();
+		styleLabelsBold = "font-size:13px;font-weight: bold";
 		rows = this.newRows();
 		header = rows.newRow();
+		header.setStyle("background-color: #DEDDDD");
 
 	}
 
 	public void addHeader(String title, int colSpan) {
-		header.appendCellChild(new Label(title), colSpan);
+		Label lblTitle = new Label(title); 
+		lblTitle.setStyle(styleLabelsBold);
+		header.appendCellChild(lblTitle, colSpan);
 
 	}
 
 	public void addHeader(String title) {
 		addHeader(title, 1);
 	}
-
+	
 	public void addLine(Object... columns) {
+		addLine(-1,columns);
+	}
+	public void addLine(Integer Record_ID, Object... columns) {
 		Row row = rows.newRow();
+		row.setAttribute("Record_ID", Record_ID);
+		
 		for (int i = 0; i < columns.length; i++) {
 
 			if (columns[i] instanceof SearchEditorColumn) {
@@ -108,7 +118,6 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 				checkColumn.setEnabled(editorColumn.isEditable());
 				row.appendCellChild(checkColumn);
 			}
-
 		}
 
 	}
@@ -121,7 +130,7 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		Row row = (Row) cell.getParent();
 		int iRow = row.getIndex() - 1;
 		int iColumn = getColumnIndex(cell, row);
-		if (listener != null) {
+		if (listener != null && evt.getOldValue()!=evt.getNewValue()) {
 			GridValueChangeEvent event = new GridValueChangeEvent(source, iRow, iColumn, evt.getOldValue(),
 					evt.getNewValue());
 			listener.gridValueChange(event);
@@ -137,6 +146,11 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		return -1;
 	}
 
+	public int getRowRecord_ID (int iRow) {
+		Row row = (Row) getCell(iRow, 0).getParent();
+		int Record_ID = (int) row.getAttribute("Record_ID");
+		return Record_ID;
+	}
 	public void setValue(int row, int column, Object Value) {
 		Component component = getCell(row, column).getFirstChild();
 		if (component instanceof Combobox) {
@@ -162,6 +176,13 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		return value;
 	}
 
+	public int getSize() {
+		int size = 0; 
+		if (getRows()!=null) {
+			size = getRows().getChildren().size();
+		}
+		return size;
+	}
 
 
 	@Override
@@ -174,4 +195,6 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		if (this.listener == null)
 			this.listener = listener;
 	}
+	
+	
 }
