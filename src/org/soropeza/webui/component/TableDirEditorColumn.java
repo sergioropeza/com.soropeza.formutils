@@ -1,37 +1,20 @@
 package org.soropeza.webui.component;
 
+import org.adempiere.webui.editor.WTableDirEditor;
 import org.compiere.model.Lookup;
 
-public class TableDirEditorColumn extends ColumnGrid {
-
-	private Lookup lookup;
-	private String columnName;
+public class TableDirEditorColumn extends  WTableDirEditor implements IColumnGrid{
 
 	public TableDirEditorColumn(Lookup lookup, Object value, Boolean isEditable) {
-		super(value, isEditable);
-		this.setLookup(lookup);
-		this.columnName = lookup.getColumnName();
+		super(lookup.getColumnName(), false, !isEditable, false, lookup);
+		getComponent().setEnabled(isEditable);
+		setValue(value);
 
 	}
-
+	
 	public TableDirEditorColumn(Lookup lookup, Object value) {
 		this(lookup, value, true);
 	}
 
-	public Lookup getLookup() {
-		return lookup;
-	}
-
-	public void setLookup(Lookup lookup) {
-		this.lookup = lookup;
-	}
-
-	public String getColumnName() {
-		return columnName;
-	}
-
-	public void setColumnName(String columnName) {
-		this.columnName = columnName;
-	}
 
 }

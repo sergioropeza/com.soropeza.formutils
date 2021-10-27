@@ -2,12 +2,16 @@ package org.soropeza.webui.component;
 
 import java.math.BigDecimal;
 
-public class NumberColumn extends ColumnGrid{
+import org.adempiere.webui.editor.WNumberEditor;
+
+public class NumberColumn extends WNumberEditor implements IColumnGrid{
 
 	public NumberColumn(BigDecimal value, Boolean isEditable) {
-		super(value, isEditable);
+		super();
+		setValue(value);
+		getComponent().setEnabled(isEditable);
 	}
 	public NumberColumn(BigDecimal value) {
-		super(value, true);
+		this(value, true);
 	}
 }

@@ -1,12 +1,15 @@
 package org.soropeza.webui.component;
 
-public class StringColumn extends ColumnGrid{
+import org.adempiere.webui.editor.WStringEditor;
 
+public class StringColumn extends WStringEditor implements IColumnGrid{
+	
 	public StringColumn(String value, Boolean isEditable) {
-		super(value, isEditable);
+		super();
+		setValue(value);
+		getComponent().setDisabled(isEditable);
 	}
 	public StringColumn(String value) {
-		super(value, true);
+		this(value, true);
 	}
-
 }

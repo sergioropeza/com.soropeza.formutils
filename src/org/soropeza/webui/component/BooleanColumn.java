@@ -1,12 +1,25 @@
 package org.soropeza.webui.component;
 
-public class BooleanColumn extends ColumnGrid{
+import org.adempiere.webui.component.Checkbox;
 
+public class BooleanColumn extends Checkbox implements  IColumnGrid{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public BooleanColumn(String value, Boolean isEditable) {
-		super(value, isEditable);
+		super();
+		setChecked(value.equals("Y"));
+		setEnabled(isEditable);
 	}
 	public BooleanColumn(String value) {
-		super(value, true);
+		this(value, true);
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public Object getValue() {
+		return isChecked();
 	}
 
 }

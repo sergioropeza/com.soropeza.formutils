@@ -1,6 +1,5 @@
 package org.soropeza.webui.component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.adempiere.webui.component.Checkbox;
@@ -47,7 +46,7 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 	}
 
 	public void addHeader(String title, int colSpan) {
-		Label lblTitle = new Label(title); 
+		Label lblTitle = new Label(title);
 		lblTitle.setStyle(styleLabelsBold);
 		header.appendCellChild(lblTitle, colSpan);
 
@@ -56,67 +55,47 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 	public void addHeader(String title) {
 		addHeader(title, 1);
 	}
-	
+
 	public void addLine(Object... columns) {
-		addLine(-1,columns);
+		addLine(-1, columns);
 	}
+
 	public void addLine(Integer Record_ID, Object... columns) {
 		Row row = rows.newRow();
 		row.setAttribute("Record_ID", Record_ID);
-		
+
 		for (int i = 0; i < columns.length; i++) {
 
 			if (columns[i] instanceof SearchEditorColumn) {
-
 				SearchEditorColumn editorColumn = (SearchEditorColumn) columns[i];
-				String ColumName = editorColumn.getColumnName();
-				WSearchEditor searchEditor = new WSearchEditor(ColumName, false, false, false,
-						editorColumn.getLookup());
-				searchEditor.setValue(editorColumn.getValue());
-				searchEditor.getComponent().setEnabled(editorColumn.isEditable());
-				searchEditor.addValueChangeListener(this);
-				ZKUpdateUtil.setWidth(searchEditor.getComponent(), "100%");
-
-				row.appendCellChild(searchEditor.getComponent());
+				editorColumn.addValueChangeListener(this);
+				ZKUpdateUtil.setWidth(editorColumn.getComponent(), "100%");
+				row.appendCellChild(editorColumn.getComponent());
 
 			} else if (columns[i] instanceof TableDirEditorColumn) {
-
 				TableDirEditorColumn editorColumn = (TableDirEditorColumn) columns[i];
-				String ColumName = editorColumn.getColumnName();
-				WTableDirEditor searchEditor = new WTableDirEditor(ColumName, false, false, false,
-						editorColumn.getLookup());
-				searchEditor.setValue(editorColumn.getValue());
-				searchEditor.getComponent().setEnabled(editorColumn.isEditable());
-				searchEditor.addValueChangeListener(this);
-				ZKUpdateUtil.setWidth(searchEditor.getComponent(), "100%");
-
-				row.appendCellChild(searchEditor.getComponent());
+				editorColumn.addValueChangeListener(this);
+				ZKUpdateUtil.setWidth(editorColumn.getComponent(), "100%");
+				row.appendCellChild(editorColumn.getComponent());
 
 			} else if (columns[i] instanceof StringColumn) {
 				StringColumn editorColumn = (StringColumn) columns[i];
-				WStringEditor stringEditor = new WStringEditor();
-				stringEditor.setValue(editorColumn.getValue());
-				stringEditor.getComponent().setDisabled(!editorColumn.isEditable());
-				stringEditor.addValueChangeListener(this);
-				ZKUpdateUtil.setWidth(stringEditor.getComponent(), "100%");
-				row.appendCellChild(stringEditor.getComponent());
+				editorColumn.addValueChangeListener(this);
+				ZKUpdateUtil.setWidth(editorColumn.getComponent(), "100%");
+				row.appendCellChild(editorColumn.getComponent());
 
 			} else if (columns[i] instanceof NumberColumn) {
-				NumberColumn editorColumn = (NumberColumn) columns[i];
-				WNumberEditor numberEditor = new WNumberEditor();
+				NumberColumn numberEditor = (NumberColumn) columns[i];
 				numberEditor.addValueChangeListener(this);
-				numberEditor.setValue(editorColumn.getValue());
-				numberEditor.getComponent().setEnabled(editorColumn.isEditable());
 				row.appendCellChild(numberEditor.getComponent());
 
 			} else if (columns[i] instanceof BooleanColumn) {
 				BooleanColumn editorColumn = (BooleanColumn) columns[i];
-				String isChecked = (String) editorColumn.getValue();
-				Checkbox checkColumn = new Checkbox();
-				checkColumn.addEventListener(Events.ON_CHANGE, this);
-				checkColumn.setChecked(isChecked.equals("Y"));
-				checkColumn.setEnabled(editorColumn.isEditable());
-				row.appendCellChild(checkColumn);
+				editorColumn.addEventListener(Events.ON_CHANGE, this);
+				row.appendCellChild(editorColumn);
+			} else if (columns[i] instanceof KeyNamePairColumn) {
+				KeyNamePairColumn editorColumn = (KeyNamePairColumn) columns[i];
+				row.appendCellChild(editorColumn);
 			}
 		}
 
@@ -130,7 +109,7 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		Row row = (Row) cell.getParent();
 		int iRow = row.getIndex() - 1;
 		int iColumn = getColumnIndex(cell, row);
-		if (listener != null && evt.getOldValue()!=evt.getNewValue()) {
+		if (listener != null && evt.getOldValue() != evt.getNewValue()) {
 			GridValueChangeEvent event = new GridValueChangeEvent(source, iRow, iColumn, evt.getOldValue(),
 					evt.getNewValue());
 			listener.gridValueChange(event);
@@ -146,44 +125,44 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		return -1;
 	}
 
-	public int getRowRecord_ID (int iRow) {
+	public int getRowRecord_ID(int iRow) {
 		Row row = (Row) getCell(iRow, 0).getParent();
 		int Record_ID = (int) row.getAttribute("Record_ID");
 		return Record_ID;
 	}
+
 	public void setValue(int row, int column, Object Value) {
 		Component component = getCell(row, column).getFirstChild();
 		if (component instanceof Combobox) {
-			Combobox editor = (Combobox)component; 
+			Combobox editor = (Combobox) component;
 			editor.setValue(Value);
-		}else if (component instanceof NumberBox) {
-			NumberBox editor = (NumberBox)component; 
+		} else if (component instanceof NumberBox) {
+			NumberBox editor = (NumberBox) component;
 			editor.setValue(Value);
 		}
 
 	}
-	
+
 	public Object getValue(int row, int column) {
 		Component component = getCell(row, column).getFirstChild();
-		Object value = null; 
+		Object value = null;
 		if (component instanceof Combobox) {
-			Combobox editor = (Combobox)component; 
+			Combobox editor = (Combobox) component;
 			value = editor.getSelectedItem().getValue();
-		}else if (component instanceof NumberBox) {
-			NumberBox editor = (NumberBox)component; 
+		} else if (component instanceof NumberBox) {
+			NumberBox editor = (NumberBox) component;
 			value = editor.getValue();
 		}
 		return value;
 	}
 
 	public int getSize() {
-		int size = 0; 
-		if (getRows()!=null) {
+		int size = 0;
+		if (getRows() != null) {
 			size = getRows().getChildren().size();
 		}
 		return size;
 	}
-
 
 	@Override
 	public void onEvent(Event event) throws Exception {
@@ -195,6 +174,5 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		if (this.listener == null)
 			this.listener = listener;
 	}
-	
-	
+
 }
