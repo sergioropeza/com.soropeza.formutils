@@ -178,7 +178,8 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		Object value = null;
 		if (component instanceof Combobox) {
 			Combobox editor = (Combobox) component;
-			value = editor.getSelectedItem().getValue();
+			if (editor.getSelectedItem()!=null)
+				value = editor.getSelectedItem().getValue();
 		} else if (component instanceof NumberBox) {
 			NumberBox editor = (NumberBox) component;
 			value = editor.getValue();
