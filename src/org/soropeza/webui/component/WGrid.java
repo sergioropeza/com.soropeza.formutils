@@ -1,9 +1,10 @@
 package org.soropeza.webui.component;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-import org.adempiere.webui.component.Checkbox;
+import org.adempiere.webui.component.Button;
 import org.adempiere.webui.component.Combobox;
 import org.adempiere.webui.component.Grid;
 import org.adempiere.webui.component.Label;
@@ -11,10 +12,6 @@ import org.adempiere.webui.component.NumberBox;
 import org.adempiere.webui.component.Row;
 import org.adempiere.webui.component.Rows;
 import org.adempiere.webui.editor.WEditor;
-import org.adempiere.webui.editor.WNumberEditor;
-import org.adempiere.webui.editor.WSearchEditor;
-import org.adempiere.webui.editor.WStringEditor;
-import org.adempiere.webui.editor.WTableDirEditor;
 import org.adempiere.webui.event.ValueChangeEvent;
 import org.adempiere.webui.event.ValueChangeListener;
 import org.adempiere.webui.util.ZKUpdateUtil;
@@ -27,6 +24,7 @@ import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Cell;
 import org.zkoss.zul.Decimalbox;
+import org.zkoss.zul.Layout;
 
 public class WGrid extends Grid implements ValueChangeListener, EventListener<Event> {
 
@@ -74,11 +72,12 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 
 	public void addLine(Integer Record_ID, Object... columns) {
 		addLine(null, Record_ID, columns);
-		
+
 	}
+
 	public void addLine(ListCellStyle style, Integer Record_ID, Object... columns) {
 		Row row = rows.newRow();
-		if (style!=null)
+		if (style != null)
 			row.setStyle(style.getStyle());
 		row.setAttribute("Record_ID", Record_ID);
 
@@ -115,6 +114,18 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 			} else if (columns[i] instanceof KeyNamePairColumn) {
 				KeyNamePairColumn editorColumn = (KeyNamePairColumn) columns[i];
 				row.appendCellChild(editorColumn, lstColSpan.get(i));
+
+			} else if (columns[i] instanceof Layout) {
+				Layout layout = (Layout)columns[i];
+				List<Component> childrens = layout.getChildren();
+				for (Component component : childrens) {
+					if (component instanceof Button) {
+						Button btn = (Button)component;
+						btn.setAttribute("Record_ID", Record_ID);
+						btn.addEventListener(Events.ON_CLICK, this);
+					}
+				}
+				row.appendCellChild(layout, lstColSpan.get(i));
 			} else {
 				row.appendCellChild(new Label(columns[i].toString()), lstColSpan.get(i));
 			}
@@ -156,13 +167,17 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		Component component = getCell(row, column).getFirstChild();
 		if (component instanceof Combobox) {
 			Combobox editor = (Combobox) component;
-			editor.addEventListener(Events.ON_CHANGE, this);
 			editor.setValue(Value);
 			fireValueChangeEvent(editor, Value);
 		} else if (component instanceof NumberBox) {
 			NumberBox editor = (NumberBox) component;
 			editor.setValue(Value);
 			fireValueChangeEvent(editor, Value);
+		} else if (component instanceof Label) {
+			Label editor = (Label) component;
+			String value = Value == null ? "" : Value.toString();
+			editor.setValue(value);
+
 		}
 
 	}
@@ -178,7 +193,7 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		Object value = null;
 		if (component instanceof Combobox) {
 			Combobox editor = (Combobox) component;
-			if (editor.getSelectedItem()!=null)
+			if (editor.getSelectedItem() != null)
 				value = editor.getSelectedItem().getValue();
 		} else if (component instanceof NumberBox) {
 			NumberBox editor = (NumberBox) component;
@@ -200,22 +215,13 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 
 	@Override
 	public void onEvent(Event evt) throws Exception {
-		Object source = evt.getTarget();
-		if (source instanceof Decimalbox) {
-			Decimalbox editor = (Decimalbox) source;
-			Object value = editor.getValue();
-			Cell cell = (Cell) editor.getParent();
-			Row row = (Row) cell.getParent();
-			int iRow = row.getIndex();
-			int iColumn = getColumnIndex(cell, row);
-			if (listener != null) {
-				GridValueChangeEvent event = new GridValueChangeEvent(source, iRow, iColumn, value, value);
-				listener.gridValueChange(event);
-			}
+		
+		if (evt.getTarget() instanceof Button) {
+			
 		}
 
 	}
-	
+
 	private void fireValueChangeEvent(Component source, Object value) {
 		Cell cell = (Cell) source.getParent();
 		Row row = (Row) cell.getParent();

@@ -44,6 +44,7 @@ import org.adempiere.webui.component.ListHeader;
 import org.adempiere.webui.component.ListItem;
 import org.adempiere.webui.component.NumberBox;
 import org.adempiere.webui.component.Textbox;
+import org.adempiere.webui.component.ToolBarButton;
 import org.adempiere.webui.component.WTableColumn;
 import org.adempiere.webui.component.ZkCssHelper;
 import org.adempiere.webui.editor.WNumberEditor;
@@ -422,6 +423,13 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 				div.setStyle("text-align: center");
 				div.appendChild(button);
 				listcell.appendChild(div);
+			}else if (field instanceof ToolBarButton){// update sergioropeza88@gmail.com
+				ToolBarButton button = (ToolBarButton)field;
+				button.addEventListener(Events.ON_CLICK,this);
+				Div div = new Div();
+				div.setStyle("text-align: center");
+				div.appendChild(button);
+				listcell.appendChild(div);
 			}else if (field instanceof WSearchEditor){// update sergioropeza88@gmail.com	
 				WSearchEditor editor = (WSearchEditor)field;
 				listcell.setValue(editor.getValue());
@@ -735,7 +743,7 @@ public class WListItemRenderer extends org.adempiere.webui.component.WListItemRe
 			else if (source instanceof Textbox)
 			{
 				value = ((Textbox)source).getValue();
-			}else if (source instanceof Button || source instanceof A) { // update sergioropeza88@gmail.com
+			}else if (source instanceof Button || source instanceof A || source instanceof ToolBarButton) { // update sergioropeza88@gmail.com
 				fireTableOnClickComponent(source, row, col);
 			}	
 
