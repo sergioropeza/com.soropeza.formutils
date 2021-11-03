@@ -11,6 +11,7 @@ import org.adempiere.webui.component.Label;
 import org.adempiere.webui.component.NumberBox;
 import org.adempiere.webui.component.Row;
 import org.adempiere.webui.component.Rows;
+import org.adempiere.webui.component.ToolBarButton;
 import org.adempiere.webui.editor.WEditor;
 import org.adempiere.webui.event.ValueChangeEvent;
 import org.adempiere.webui.event.ValueChangeListener;
@@ -115,6 +116,11 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 				KeyNamePairColumn editorColumn = (KeyNamePairColumn) columns[i];
 				row.appendCellChild(editorColumn, lstColSpan.get(i));
 
+			}else if (columns[i] instanceof ToolBarButton) {
+				ToolBarButton btn = (ToolBarButton) columns[i];
+				btn.setAttribute("Record_ID", Record_ID);
+				row.appendCellChild(btn, lstColSpan.get(i));
+
 			} else if (columns[i] instanceof Layout) {
 				Layout layout = (Layout)columns[i];
 				List<Component> childrens = layout.getChildren();
@@ -162,17 +168,24 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		int Record_ID = (int) row.getAttribute("Record_ID");
 		return Record_ID;
 	}
-
 	public void setValue(Object Value, int row, int column) {
+		setValue(Value, row, column, true);
+	}
+
+	public void setValue(Object Value, int row, int column, Boolean isActiveEvent) {
 		Component component = getCell(row, column).getFirstChild();
 		if (component instanceof Combobox) {
 			Combobox editor = (Combobox) component;
 			editor.setValue(Value);
-			fireValueChangeEvent(editor, Value);
+			if (isActiveEvent) {
+				fireValueChangeEvent(editor, Value);
+			}
 		} else if (component instanceof NumberBox) {
 			NumberBox editor = (NumberBox) component;
 			editor.setValue(Value);
-			fireValueChangeEvent(editor, Value);
+			if (isActiveEvent) {
+				fireValueChangeEvent(editor, Value);
+			}
 		} else if (component instanceof Label) {
 			Label editor = (Label) component;
 			String value = Value == null ? "" : Value.toString();

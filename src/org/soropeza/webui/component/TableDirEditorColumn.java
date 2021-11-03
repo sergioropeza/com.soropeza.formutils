@@ -15,7 +15,4 @@ public class TableDirEditorColumn extends  WTableDirEditor implements IColumnGri
 	public TableDirEditorColumn(Lookup lookup, Object value) {
 		this(lookup, value, true);
 	}
-
-	
-
 }
