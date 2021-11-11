@@ -16,6 +16,7 @@ import org.adempiere.webui.editor.WEditor;
 import org.adempiere.webui.event.ValueChangeEvent;
 import org.adempiere.webui.event.ValueChangeListener;
 import org.adempiere.webui.util.ZKUpdateUtil;
+import org.compiere.util.Env;
 import org.soropeza.event.GridValueChangeEvent;
 import org.soropeza.listener.GridValueChangeListener;
 import org.zkoss.zk.ui.Component;
@@ -105,8 +106,8 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 
 			} else if (columns[i] instanceof NumberColumn) {
 				NumberColumn numberEditor = (NumberColumn) columns[i];
-				numberEditor.addValueChangeListener(this);
-				row.appendCellChild(numberEditor.getComponent(), lstColSpan.get(i));
+				numberEditor.addEventListener(Events.ON_CHANGE, this);
+				row.appendCellChild(numberEditor, lstColSpan.get(i));
 
 			} else if (columns[i] instanceof BooleanColumn) {
 				BooleanColumn editorColumn = (BooleanColumn) columns[i];
@@ -229,7 +230,17 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 	@Override
 	public void onEvent(Event evt) throws Exception {
 		
-		if (evt.getTarget() instanceof Button) {
+		if (evt.getTarget() instanceof Decimalbox) {
+			Decimalbox source = (Decimalbox) evt.getTarget();
+			NumberColumn numberColumn =(NumberColumn) source.getParent();
+			Cell cell = (Cell) numberColumn.getParent();
+			Row row = (Row) cell.getParent();
+			int iRow = row.getIndex();
+			int iColumn = getColumnIndex(cell, row);
+			if (listener != null) {
+				GridValueChangeEvent event = new GridValueChangeEvent(source, iRow, iColumn, numberColumn.getOldValue(), source.getValue());
+				listener.gridValueChange(event);
+			}
 			
 		}
 
