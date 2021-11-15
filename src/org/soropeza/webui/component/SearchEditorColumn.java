@@ -8,6 +8,7 @@ public class SearchEditorColumn extends WSearchEditor implements IColumnGrid{
 	public SearchEditorColumn(Lookup lookup, Object value, Boolean isEditable) {
 		super(lookup.getColumnName(), false, !isEditable, false, lookup);
 		getComponent().setEnabled(isEditable);
+		getComponent().setAttribute("searchEditor", this);
 		setValue(value);
 
 	}
