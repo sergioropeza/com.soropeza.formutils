@@ -225,8 +225,10 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		}else if (component instanceof ComboEditorBox) {
 			ComboEditorBox editor = (ComboEditorBox) component;
 			WSearchEditor searchEditor = (WSearchEditor) editor.getAttribute("searchEditor");
-			value= searchEditor.getValue();
-			
+			value= searchEditor.getValue();	
+		}else if (component instanceof BooleanColumn) {
+			BooleanColumn editor = (BooleanColumn) component;
+			value= editor.getValue();
 		}
 		return value;
 	}
