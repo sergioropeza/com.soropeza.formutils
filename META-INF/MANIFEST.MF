@@ -5,14 +5,14 @@ Bundle-SymbolicName: com.soropeza.formutils
 Bundle-Version: 8.2.0.qualifier
 Bundle-Vendor: SOROPEZA
 Automatic-Module-Name: com.soropeza.formutils
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.adempiere.base,
  org.adempiere.ui.zk,
  org.adempiere.ui,
  zcommon,
- org.adempiere.plugin.utils;bundle-version="8.2.0",
  zul,
- zk
+ zk,
+ org.adempiere.plugin.utils;bundle-version="5.1.0"
 Export-Package: org.soropeza.event,
  org.soropeza.listener,
  org.soropeza.webui.component

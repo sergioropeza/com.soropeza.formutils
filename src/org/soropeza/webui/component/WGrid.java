@@ -5,13 +5,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.adempiere.webui.component.Button;
-import org.adempiere.webui.component.ComboEditorBox;
 import org.adempiere.webui.component.Combobox;
 import org.adempiere.webui.component.Grid;
 import org.adempiere.webui.component.Label;
 import org.adempiere.webui.component.NumberBox;
 import org.adempiere.webui.component.Row;
 import org.adempiere.webui.component.Rows;
+import org.adempiere.webui.component.Searchbox;
 import org.adempiere.webui.component.ToolBarButton;
 import org.adempiere.webui.editor.WEditor;
 import org.adempiere.webui.editor.WSearchEditor;
@@ -194,8 +194,8 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 			String value = Value == null ? "" : Value.toString();
 			editor.setValue(value);
 
-		}else if (component instanceof ComboEditorBox) {
-			ComboEditorBox editor = (ComboEditorBox) component;
+		}else if (component instanceof Searchbox) {
+			Searchbox editor = (Searchbox) component;
 			WSearchEditor searchEditor = (WSearchEditor) editor.getAttribute("searchEditor");
 			searchEditor.setValue(Value);
 			
@@ -222,8 +222,8 @@ public class WGrid extends Grid implements ValueChangeListener, EventListener<Ev
 		} else if (component instanceof KeyNamePairColumn) {
 			KeyNamePairColumn editor = (KeyNamePairColumn) component;
 			value = editor.getRecord_ID();
-		}else if (component instanceof ComboEditorBox) {
-			ComboEditorBox editor = (ComboEditorBox) component;
+		}else if (component instanceof Searchbox) {
+			Searchbox editor = (Searchbox) component;
 			WSearchEditor searchEditor = (WSearchEditor) editor.getAttribute("searchEditor");
 			value= searchEditor.getValue();	
 		}else if (component instanceof BooleanColumn) {
