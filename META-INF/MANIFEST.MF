@@ -13,7 +13,8 @@ Require-Bundle: org.adempiere.base,
  org.adempiere.plugin.utils;bundle-version="8.2.0",
  zul,
  zk
-Export-Package: org.soropeza.event,
+Export-Package: com.soropeza.utils,
+ org.soropeza.event,
  org.soropeza.listener,
  org.soropeza.webui.component
 Bundle-ActivationPolicy: lazy
