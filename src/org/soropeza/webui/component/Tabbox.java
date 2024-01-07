@@ -12,7 +12,7 @@ public class Tabbox extends org.adempiere.webui.component.Tabbox{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public Tabpanel newTabbox(String label) {
+	public Tabpanel newTabpanel(String label) {
 		Tabpanel tabPanel = new Tabpanel();
 		Tab tab= new Tab();
 		tab.setLabel(label);
